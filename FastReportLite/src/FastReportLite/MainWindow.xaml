@@ -702,7 +702,7 @@
             <StatusBarItem>
                 <TextBlock>
                     <Run Text="组件数: "/>
-                    <Run Text="{Binding SelectedBand.Components.Count, FallbackValue=0}"/>
+                    <Run Text="{Binding SelectedBand.Components.Count, Mode=OneWay, FallbackValue=0}"/>
                 </TextBlock>
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
