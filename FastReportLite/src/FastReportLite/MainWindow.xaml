@@ -10,6 +10,7 @@
         MinWidth="1280" MinHeight="720"
         Width="1600" Height="900"
         WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
         Background="{StaticResource BackgroundBrush}">
 
     <Window.DataContext>
