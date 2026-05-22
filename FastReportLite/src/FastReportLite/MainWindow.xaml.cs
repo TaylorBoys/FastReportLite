@@ -1,3 +1,4 @@
+using Microsoft.Win32;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -17,6 +18,29 @@ namespace FastReportLite
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void BrowseFilePath_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog();
+            
+            if (ViewModel.SelectedDataSource?.DataSourceType == DataSourceType.JSON)
+            {
+                dialog.Filter = "JSON文件 (*.json)|*.json";
+            }
+            else if (ViewModel.SelectedDataSource?.DataSourceType == DataSourceType.CSV)
+            {
+                dialog.Filter = "CSV文件 (*.csv)|*.csv";
+            }
+            else if (ViewModel.SelectedDataSource?.DataSourceType == DataSourceType.SQLite)
+            {
+                dialog.Filter = "SQLite数据库 (*.db)|*.db|所有文件 (*.*)|*.*";
+            }
+
+            if (dialog.ShowDialog() == true && ViewModel.SelectedDataSource != null)
+            {
+                ViewModel.SelectedDataSource.FilePath = dialog.FileName;
+            }
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
