@@ -1,0 +1,39 @@
+# .NET 编译输出
+bin/
+obj/
+[Bb]uild/
+*.dll
+*.exe
+*.pdb
+*.user
+*.suo
+*.cache
+*.ilk
+*.log
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.swp
+*~
+
+# NuGet
+packages/
+*.nupkg
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# 其他
+*.tmp
+*.temp
+*.bak
+*.orig
