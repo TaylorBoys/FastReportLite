@@ -474,14 +474,14 @@
                 </Grid>
             </Grid>
 
-            <!-- Right Panel - Properties -->
+            <!-- Right Panel - Properties and Data -->
             <Border Grid.Column="2" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1,0,0,0" Background="White">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="200"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
                     <!-- Properties Header -->
@@ -490,7 +490,7 @@
                     </Border>
 
                     <!-- Properties Panel -->
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Background="#FAFAFA">
                         <StackPanel Margin="8">
                             <!-- General Properties -->
                             <Expander Header="常规" IsExpanded="True" Margin="0,0,0,8">
@@ -558,7 +558,8 @@
                                     <Label Content="数据绑定" Margin="0,8,0,0"/>
                                     <TextBox Text="{Binding SelectedComponent.DataBinding, UpdateSourceTrigger=PropertyChanged}"
                                              IsEnabled="{Binding SelectedComponent, Converter={StaticResource NullToBoolConverter}}"
-                                             ToolTip="例如: {CustomerName}"/>
+                                             ToolTip="例如: {CustomerName}"
+                                             Name="DataBindingTextBox"/>
                                 </StackPanel>
                             </Expander>
 
@@ -611,7 +612,7 @@
                             </Expander>
 
                             <!-- Script Properties -->
-                            <Expander Header="脚本" IsExpanded="True" Margin="0,0,0,8">
+                            <Expander Header="脚本" IsExpanded="False" Margin="0,0,0,8">
                                 <StackPanel Margin="8">
                                     <CheckBox Content="启用脚本" IsChecked="{Binding SelectedComponent.UseScript}"
                                               IsEnabled="{Binding SelectedComponent, Converter={StaticResource NullToBoolConverter}}"/>
@@ -667,85 +668,93 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Data Sources List -->
-                    <ListBox Grid.Row="3" ItemsSource="{Binding DataSources}" 
-                             SelectedItem="{Binding SelectedDataSource}" Margin="4"
-                             Height="120">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
-                                    <TextBlock Text="{Binding DataSourceType}" FontSize="10" Foreground="#666"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-
-                    <!-- Data Source Properties -->
-                    <Border Grid.Row="4" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" 
-                            Background="White" Margin="4" Padding="8"
-                            Visibility="{Binding SelectedDataSource, Converter={StaticResource NullToBoolConverter}, ConverterParameter=True}">
+                    <!-- Data Sources and Fields Panel -->
+                    <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" Background="#FAFAFA">
                         <StackPanel>
-                            <TextBlock Text="数据源属性" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource PrimaryBrush}"/>
-                            
-                            <Label Content="名称"/>
-                            <TextBox Text="{Binding SelectedDataSource.Name, UpdateSourceTrigger=PropertyChanged}"
-                                     IsEnabled="{Binding SelectedDataSource, Converter={StaticResource NullToBoolConverter}}"/>
-                            
-                            <Label Content="类型" Margin="0,8,0,0"/>
-                            <ComboBox SelectedItem="{Binding SelectedDataSource.DataSourceType, UpdateSourceTrigger=PropertyChanged}"
-                                      IsEnabled="{Binding SelectedDataSource, Converter={StaticResource NullToBoolConverter}}"
-                                      Width="150">
-                                <ComboBoxItem>SQLite</ComboBoxItem>
-                                <ComboBoxItem>CSV</ComboBoxItem>
-                                <ComboBoxItem>JSON</ComboBoxItem>
-                                <ComboBoxItem>SqlServer</ComboBoxItem>
-                                <ComboBoxItem>Object</ComboBoxItem>
-                            </ComboBox>
-                            
-                            <Label Content="连接字符串" Margin="0,8,0,0"/>
-                            <TextBox Text="{Binding SelectedDataSource.ConnectionString, UpdateSourceTrigger=PropertyChanged}"
-                                     IsEnabled="{Binding SelectedDataSource, Converter={StaticResource NullToBoolConverter}}"
-                                     ToolTip="SQLite: Data Source=path/to/file.db"/>
-                            
-                            <Label Content="查询语句" Margin="0,8,0,0"/>
-                            <TextBox Text="{Binding SelectedDataSource.Query, UpdateSourceTrigger=PropertyChanged}"
-                                     IsEnabled="{Binding SelectedDataSource, Converter={StaticResource NullToBoolConverter}}"
-                                     TextWrapping="Wrap" AcceptsReturn="True" Height="60"/>
-                            
-                            <Label Content="表名" Margin="0,8,0,0"/>
-                            <TextBox Text="{Binding SelectedDataSource.TableName, UpdateSourceTrigger=PropertyChanged}"
-                                     IsEnabled="{Binding SelectedDataSource, Converter={StaticResource NullToBoolConverter}}"/>
-                            
-                            <Label Content="文件路径" Margin="0,8,0,0"/>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBox Text="{Binding SelectedDataSource.FilePath, UpdateSourceTrigger=PropertyChanged}"
-                                         IsEnabled="{Binding SelectedDataSource, Converter={StaticResource NullToBoolConverter}}"
-                                         Width="200"/>
-                                <Button Content="..." Width="24" Margin="4,0,0,0"
-                                        Click="BrowseFilePath_Click"/>
-                            </StackPanel>
-                            
-                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                <Button Content="测试连接" Command="{Binding TestDataSourceConnectionCommand}"
-                                        Margin="0,0,8,0"/>
-                                <Button Content="刷新字段" Command="{Binding RefreshDataSourceFieldsCommand}"/>
-                            </StackPanel>
-                            
-                            <Label Content="字段列表" Margin="0,8,0,0"/>
-                            <ListBox ItemsSource="{Binding SelectedDataSource.Fields}" Height="80"
-                                     IsEnabled="{Binding SelectedDataSource.IsConnected, FallbackValue=False}">
+                            <!-- Data Sources List -->
+                            <ListBox ItemsSource="{Binding DataSources}" 
+                                     SelectedItem="{Binding SelectedDataSource}" Margin="4"
+                                     Height="80">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Name}" Width="120"/>
-                                            <TextBlock Text="{Binding DataType}" FontSize="10" Foreground="#666"/>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding DataSourceType}" FontSize="10" Foreground="#666"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
+
+                            <!-- Data Source Properties -->
+                            <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" 
+                                    Background="White" Margin="4" Padding="8"
+                                    Visibility="{Binding SelectedDataSource, Converter={StaticResource NullToBoolConverter}, ConverterParameter=True}">
+                                <StackPanel>
+                                    <TextBlock Text="数据源属性" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource PrimaryBrush}"/>
+                                    
+                                    <Label Content="名称"/>
+                                    <TextBox Text="{Binding SelectedDataSource.Name, UpdateSourceTrigger=PropertyChanged}"
+                                             IsEnabled="{Binding SelectedDataSource, Converter={StaticResource NullToBoolConverter}}"/>
+                                    
+                                    <Label Content="类型" Margin="0,8,0,0"/>
+                                    <ComboBox SelectedItem="{Binding SelectedDataSource.DataSourceType, UpdateSourceTrigger=PropertyChanged}"
+                                              IsEnabled="{Binding SelectedDataSource, Converter={StaticResource NullToBoolConverter}}"
+                                              Width="150">
+                                        <ComboBoxItem>SQLite</ComboBoxItem>
+                                        <ComboBoxItem>CSV</ComboBoxItem>
+                                        <ComboBoxItem>JSON</ComboBoxItem>
+                                        <ComboBoxItem>SqlServer</ComboBoxItem>
+                                        <ComboBoxItem>Object</ComboBoxItem>
+                                    </ComboBox>
+                                    
+                                    <Label Content="连接字符串" Margin="0,8,0,0"/>
+                                    <TextBox Text="{Binding SelectedDataSource.ConnectionString, UpdateSourceTrigger=PropertyChanged}"
+                                             IsEnabled="{Binding SelectedDataSource, Converter={StaticResource NullToBoolConverter}}"
+                                             ToolTip="SQLite: Data Source=path/to/file.db"/>
+                                    
+                                    <Label Content="查询语句" Margin="0,8,0,0"/>
+                                    <TextBox Text="{Binding SelectedDataSource.Query, UpdateSourceTrigger=PropertyChanged}"
+                                             IsEnabled="{Binding SelectedDataSource, Converter={StaticResource NullToBoolConverter}}"
+                                             TextWrapping="Wrap" AcceptsReturn="True" Height="40"/>
+                                    
+                                    <Label Content="表名" Margin="0,8,0,0"/>
+                                    <TextBox Text="{Binding SelectedDataSource.TableName, UpdateSourceTrigger=PropertyChanged}"
+                                             IsEnabled="{Binding SelectedDataSource, Converter={StaticResource NullToBoolConverter}}"/>
+                                    
+                                    <Label Content="文件路径" Margin="0,8,0,0"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox Text="{Binding SelectedDataSource.FilePath, UpdateSourceTrigger=PropertyChanged}"
+                                                 IsEnabled="{Binding SelectedDataSource, Converter={StaticResource NullToBoolConverter}}"
+                                                 Width="200"/>
+                                        <Button Content="..." Width="24" Margin="4,0,0,0"
+                                                Click="BrowseFilePath_Click"/>
+                                    </StackPanel>
+                                    
+                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                        <Button Content="测试连接" Command="{Binding TestDataSourceConnectionCommand}"
+                                                Margin="0,0,8,0"/>
+                                        <Button Content="刷新字段" Command="{Binding RefreshDataSourceFieldsCommand}"/>
+                                    </StackPanel>
+                                    
+                                    <Label Content="字段列表 (双击添加)" Margin="0,8,0,0"/>
+                                    <ListBox ItemsSource="{Binding SelectedDataSource.Fields}" Height="100"
+                                             IsEnabled="{Binding SelectedDataSource.IsConnected, FallbackValue=False}"
+                                             MouseDoubleClick="FieldListBox_MouseDoubleClick">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Padding="4" Background="Transparent">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Name}" Width="100" FontWeight="SemiBold"/>
+                                                        <TextBlock Text="({Binding DataType})" FontSize="10" Foreground="#666"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </StackPanel>
+                            </Border>
                         </StackPanel>
-                    </Border>
+                    </ScrollViewer>
                 </Grid>
             </Border>
         </Grid>

@@ -43,6 +43,29 @@ namespace FastReportLite
             }
         }
 
+        private void FieldListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is ListBox listBox && listBox.SelectedItem is FieldDefinition field)
+            {
+                if (ViewModel.SelectedComponent != null)
+                {
+                    // 将字段名添加到数据绑定中
+                    string bindingText = $"{{{field.Name}}}";
+                    
+                    if (string.IsNullOrEmpty(ViewModel.SelectedComponent.DataBinding))
+                    {
+                        ViewModel.SelectedComponent.DataBinding = bindingText;
+                    }
+                    else
+                    {
+                        ViewModel.SelectedComponent.DataBinding += bindingText;
+                    }
+                    
+                    ViewModel.MarkAsChanged();
+                }
+            }
+        }
+
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             if (ViewModel.HasUnsavedChanges)
