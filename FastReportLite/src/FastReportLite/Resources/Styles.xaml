@@ -202,7 +202,7 @@
                                                 </Setter>
                                             </Trigger>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#F0F7FF" TargetName="HeaderSite"/>
+                                                <Setter Property="Background" Value="#F0F7FF"/>
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
